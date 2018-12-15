@@ -14,8 +14,9 @@ class ManageFile
     const FIELD_TYPE_BOOLEAN = 'boolean';
     const FIELD_TYPE_FLOAT = 'float';
     const FIELD_TYPE_INT = 'int';
-    const FILTER_TYPE_IP = 'address_ip';
-    const FILTER_TYPE_MAC = 'address_mac';
+    const filter_var_TYPE_IP = 'address_ip';
+    const filter_var_TYPE_MAC = 'address_mac';
+    const filter_var_TYPE_STRING = 'string';
 
     private $sFileName;
     private $sFileType;
@@ -89,28 +90,35 @@ class ManageFile
             $nIndexHeaderAssign = array_search($sName, $this->aHeader);
 
             //if is a mail
-            if(true === filter($oValue, FILTER_VALIDATE_EMAIL)){
+            if(true === filter_var($oValue, filter_var_VALIDATE_EMAIL)){
                 $this->aHeader[$nIndexHeaderAssign] = self::FIELD_TYPE_MAIL;
             }
+            else if(true === filter_var($oValue, filter_var_VALIDATE_MAC)){
+                $this->aHeader[$nIndexHeaderAssign] = self::filter_var_TYPE_MAC;
+            }
             //if is an URL
-            else if(true === filter($oValue, FILTER_VALIDATE_URL)){
+            else if(true === filter_var($oValue, filter_var_VALIDATE_URL)){
                 $this->aHeader[$nIndexHeaderAssign] = self::FIELD_TYPE_URL;
             }
             //if is a boolean
-            else if(true === filter($oValue, FILTER_VALIDATE_BOOLEAN)){
+            else if(true === filter_var($oValue, filter_var_VALIDATE_BOOLEAN)){
                 $this->aHeader[$nIndexHeaderAssign] = self::FIELD_TYPE_BOOLEAN;
             }
             //if is a float
-            else if(true === filter($oValue, FILTER_VALIDATE_FLOAT)){
+            else if(true === filter_var($oValue, filter_var_VALIDATE_FLOAT)){
                 $this->aHeader[$nIndexHeaderAssign] = self::FIELD_TYPE_FLOAT;
             }
             //if is an adress IP
-            else if(true === filter($oValue, FILTER_VALIDATE_IP)){
+            else if(true === filter_var($oValue, filter_var_VALIDATE_IP)){
                 $this->aHeader[$nIndexHeaderAssign] = self::FILED_TYPE_IP;
             }
+            else if(true === filter_var($oValue, filter_var_VALIDATE_INT)){
+                $this->aHeader[$nIndexHeaderAssign] = self::FIELD_TYPE_INT;
+            }
+            else{
+                $this->aHeader[$nIndexHeaderAssign] = self::filter_var_TYPE_STRING;
+            }
 
-            //if is a int
-            //elif is a string
             //elif is a firstname
             //elif is a lastname
             
@@ -121,6 +129,9 @@ class ManageFile
             //elif is a time
             //elif is a datetime
         }
+
+        HandleLogger::debug(HandleLogger::generateTitle('OUTPUT aHeader'));
+        HandleLogger::debug(HandleLogger::arrayToString($this->aHeader));
     }
 
     public function anonymise()
@@ -129,7 +140,7 @@ class ManageFile
 
         $this->parseFile();
 
-        if (true === $this->bHasHeader && 0 === count($this->aHeader) && self::FILE_CSV === $this->sFileType) {
+        if (true === $this->bHasHeader && self::FILE_CSV === $this->sFileType) {
             $this->generateHeader();
             $this->castArrayDataType();
         }
