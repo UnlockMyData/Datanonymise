@@ -1,2 +1,5 @@
 # Datanonymise
-Un outils qui permet d'anonymiser des données personnelles
+## EN
+A tool that helps you anonymise personnal data
+## FR
+Un outil qui permet d'anonymiser les données personnelles
