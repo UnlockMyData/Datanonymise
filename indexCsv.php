@@ -6,7 +6,7 @@ include("ManageFile.php");
 
 
 /************* PARAMS **********************************/
-$sFileName = 'first.csv';
+$sFileName = 'General User Info.csv';
 $bFileType = ManageFile::FILE_CSV;
 $bHasHeader = true;
 /************* END PARAMS *****************************/
