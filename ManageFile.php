@@ -150,7 +150,7 @@ class ManageFile
             //if is an adress IP
             else if (true === filter_var($oValue, FILTER_VALIDATE_IP)) {
                 $this->aHeaderType[$sName] = self::FILED_TYPE_IP;
-            } else if (true === filter_var($oValue, FILTER_VALIDATE_INT)) {
+            } else if (true === filter_var($oValue, FILTER_VALIDATE_INT) || ctype_digit($oValue)) {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_INT;
             } else {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_STRING;
@@ -209,13 +209,40 @@ class ManageFile
 
         if (true === $this->bHasHeader && self::FILE_CSV === $this->sFileType) {
             $this->generateHeader();
-            $this->castArrayDataType();
         }
+        $this->castArrayDataType();
+        $this->replaceRGPData();
+        $this->alterAllData();
+    }
+
+    public function replaceRGPData(){
+        HandleLogger::debug(HandleLogger::generateTitle('REPLACE MAIN DATA RGPD'));
+    }
+
+    public function alterAllData(){
+        HandleLogger::debug(HandleLogger::generateTitle('ALTER ALL DATA'));
     }
 
     public function castArrayDataType()
     {
+        HandleLogger::debug(HandleLogger::generateTitle('CAST DATA WITH HEADER INFO'));
 
+        foreach($this->aData as &$oRow){
+            foreach($oRow as $sName => &$oValue){
+                if(self::FIELD_TYPE_BOOLEAN === $this->aHeaderType[$sName]){
+                    $oValue = (boolean) $oValue;
+                }
+                //if is a float
+                else if (true === in_array($this->aHeaderType[$sName],array_merge([self::FIELD_TYPE_FLOAT], self::DICT_COLUMN_NAME_LONGITUDE, self::DICT_COLUMN_NAME_LATITUDE))) {
+                    $oValue = (float) $oValue;
+                }
+                else if (self::FIELD_TYPE_INT === $this->aHeaderType[$sName]) {
+                    $oValue = (int) $oValue;
+                }
+            }
+        }
+        HandleLogger::debug(HandleLogger::generateTitle('VAR_DUMP aData'));
+        HandleLogger::debug(HandleLogger::displayType($this->aData));
     }
 
     public function generateFile($sPrefix = 'john_doe_')
