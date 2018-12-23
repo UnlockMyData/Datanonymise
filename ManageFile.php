@@ -45,6 +45,21 @@ class ManageFile
     const DICT_COLUMN_NAME_LOCAL_LANGUAGE = ['locale'];
     const DICT_COLUMN_NAME_TIMEZONE = ['timezone', 'time_zone'];
 
+    //https://www.fakepersongenerator.com/random-florida-address-generator
+    const ANONYMOUS_USER = ['lastname' => 'doe', 
+                            'firstname' => 'john',
+                            'email' => 'john.doe@unlock-my-data.com',
+                            'address' => '2061 Terry Lane',
+                            'city' => 'apopka',
+                            'zipcode' => '32703',
+                            'state' => 'FL',
+                            'state_full' => 'florida',
+                            'phone_number' => '321-322-2620',
+                            'mobile_number' => '305-607-9487',
+                            'timezone' => 'UTC-5: Eastern Standard Time (EST)',
+                            'latitude' => '28.584480',
+                            'longitude' => '-81.625229'];
+
     private $sFileName;
     private $sFileType;
     private $bHasHeader;
@@ -121,7 +136,7 @@ class ManageFile
         HandleLogger::debug(HandleLogger::arrayToString($this->aData));
     }
 
-    public function generateHeader()
+    private function generateHeader()
     {
         HandleLogger::debug(HandleLogger::generateTitle('GENERATE TYPE HEADER'));
 
@@ -215,15 +230,19 @@ class ManageFile
         $this->alterAllData();
     }
 
-    public function replaceRGPData(){
+    private function getMainDataUser(){
+        HandleLogger::debug(HandleLogger::generateTitle('GET MAIN DATA USER'));
+    }
+
+    private function replaceRGPData(){
         HandleLogger::debug(HandleLogger::generateTitle('REPLACE MAIN DATA RGPD'));
     }
 
-    public function alterAllData(){
+    private function alterAllData(){
         HandleLogger::debug(HandleLogger::generateTitle('ALTER ALL DATA'));
     }
 
-    public function castArrayDataType()
+    private function castArrayDataType()
     {
         HandleLogger::debug(HandleLogger::generateTitle('CAST DATA WITH HEADER INFO'));
 
