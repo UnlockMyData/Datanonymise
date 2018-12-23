@@ -2,9 +2,10 @@
     class HandleLogger{
 
         /** WEB PAGE MODE */
-        /** const RETURN_LINE = "<br />"; */
+        const RETURN_LINE = "<br />";
+
         /** CONSOLE MODE */
-        const RETURN_LINE = "\n";
+        //const RETURN_LINE = "\n";
 
         public static function error(string $sMessage):void{
             echo $sMessage.self::RETURN_LINE;
@@ -25,7 +26,10 @@
         public static function displayType($aData){
             ob_start();
             var_dump($aData);
-            return ob_get_clean();
+
+            $sVarDumpValue = '<pre>'.ob_get_clean().'</pre>';
+            
+            return $sVarDumpValue;
         }
 
     }
