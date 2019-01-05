@@ -45,6 +45,12 @@ class ManageFile
     const DICT_COLUMN_NAME_LOCAL_LANGUAGE = ['locale'];
     const DICT_COLUMN_NAME_TIMEZONE = ['timezone', 'time_zone'];
 
+    const DICT_VALUE_DETECT_BOOLEAN = ['True','TRUE', 'true', 'on', 'yes', '1', 1, 0, '0', 'no', 'off', 'False', 'false', 'FALSE'];
+
+    const FORMAT_DATETIME = 'Y-m-d H:i:s';
+    const FORMAT_TIME = 'H:i:s';
+    const FORMAT_DATE = 'Y-m-d';
+
     //https://www.fakepersongenerator.com/random-florida-address-generator
     const ANONYMOUS_USER = ['lastname' => 'doe', 
                             'firstname' => 'john',
@@ -154,10 +160,6 @@ class ManageFile
             else if (true === filter_var($oValue, FILTER_VALIDATE_URL)) {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_URL;
             }
-            //if is a boolean
-            else if (true === filter_var($oValue, FILTER_VALIDATE_BOOLEAN)) {
-                $this->aHeaderType[$sName] = self::FIELD_TYPE_BOOLEAN;
-            }
             //if is a float
             else if (true === filter_var($oValue, FILTER_VALIDATE_FLOAT)) {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_FLOAT;
@@ -167,7 +169,24 @@ class ManageFile
                 $this->aHeaderType[$sName] = self::FILED_TYPE_IP;
             } else if (true === filter_var($oValue, FILTER_VALIDATE_INT) || ctype_digit($oValue)) {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_INT;
-            } else {
+            } 
+            //if is a boolean
+            else if (true === in_array($oValue, self::DICT_VALUE_DETECT_BOOLEAN, true)) {
+                $this->aHeaderType[$sName] = self::FIELD_TYPE_BOOLEAN;
+            }
+            //if a datetime
+            else if(false !== DateTime::createFromFormat(self::FORMAT_DATETIME, $oValue)){
+                $this->aHeaderType[$sName] = self::FIELD_TYPE_DATETIME;
+            }
+            //if a date
+            else if(false !== DateTime::createFromFormat(self::FORMAT_DATE, $oValue)){
+                $this->aHeaderType[$sName] = self::FIELD_TYPE_DATE;
+            }
+            //if a time
+            else if(false !== DateTime::createFromFormat(self::FORMAT_TIME, $oValue)){
+                $this->aHeaderType[$sName] = self::FIELD_TYPE_TIME;
+            }
+            else {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_STRING;
 
                 //analysis with name of the column
@@ -202,10 +221,6 @@ class ManageFile
                     $this->aHeaderType[$sName] = self::FIELD_TYPE_ZIPCODE;
                 }
             }
-
-            //elif is a date
-            //elif is a time
-            //elif is a datetime
             //elif is a token
         }
 
@@ -230,14 +245,17 @@ class ManageFile
         $this->alterAllData();
     }
 
+    /** GET MAIN DATA USER TO BETTER REPLACE IT */
     private function getMainDataUser(){
         HandleLogger::debug(HandleLogger::generateTitle('GET MAIN DATA USER'));
     }
 
+    /** LITTERELY REPLACE DATA */
     private function replaceRGPData(){
         HandleLogger::debug(HandleLogger::generateTitle('REPLACE MAIN DATA RGPD'));
     }
 
+    /** ALTER DATA LIKE TOKEN */
     private function alterAllData(){
         HandleLogger::debug(HandleLogger::generateTitle('ALTER ALL DATA'));
     }
@@ -257,6 +275,15 @@ class ManageFile
                 }
                 else if (self::FIELD_TYPE_INT === $this->aHeaderType[$sName]) {
                     $oValue = (int) $oValue;
+                }
+                else if(self::FIELD_TYPE_DATETIME === $this->aHeaderType[$sName]){
+                    $oValue = DateTime::createFromFormat(self::FORMAT_DATETIME, $oValue);
+                }
+                else if(self::FIELD_TYPE_DATE === $this->aHeaderType[$sName]){
+                    $oValue = DateTime::createFromFormat(self::FORMAT_DATE, $oValue);
+                }
+                else if(self::FIELD_TYPE_TIME === $this->aHeaderType[$sName]){
+                    $oValue = DateTime::createFromFormat(self::FORMAT_TIME, $oValue);
                 }
             }
         }
