@@ -13,7 +13,7 @@ $bHasHeader = true;
 
 $oManage = new ManageFile($sFileName, $bFileType, $bHasHeader);
 
-$oManage->anonymise();
+$oManage->anonymise(true);
 
 $oManage->generateFile();
 

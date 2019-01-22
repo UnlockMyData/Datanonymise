@@ -235,7 +235,7 @@ class ManageFile
         HandleLogger::debug(HandleLogger::arrayToString($this->aHeaderData));
     }
 
-    public function anonymise()
+    public function anonymise($bAlterAllData = false)
     {
         HandleLogger::debug(HandleLogger::generateTitle('ANONYMISE'));
 
@@ -245,7 +245,7 @@ class ManageFile
             $this->generateHeader();
         }
         $this->castArrayDataType();
-        $this->changePersonnalData();
+        $this->changePersonnalData($bAlterAllData);
     }
 
     private function castArrayDataType()
@@ -276,7 +276,7 @@ class ManageFile
     }
 
     /** LITTERELY REPLACE OR CHANGE DATA */
-    private function changePersonnalData()
+    private function changePersonnalData($bAlterAllData)
     {
         HandleLogger::debug(HandleLogger::generateTitle('REPLACE MAIN DATA RGPD'));
     
@@ -308,26 +308,35 @@ class ManageFile
                     
                     $this->aAlteredData[$nIndex][$sName] = $sAnonymData;
 
-                    //encode to string to replace item easily
-                    $this->aAlteredData = json_encode($this->aAlteredData, JSON_UNESCAPED_UNICODE);
+                    /** TODO IF you have a better idea.... */
+                    foreach ($this->aAlteredData[$nIndex] as $sAlterName => &$oAlterValue) {
+                        if(true === is_string($oAlterValue)){
+                            // replace same value
+                            $oAlterValue = str_replace($oValue,$sAnonymData,$oAlterValue);
 
-                    // replace all value
-                    $this->aAlteredData = str_replace($oValue,$sAnonymData,$this->aAlteredData);
-                    // handle lowCase
-                    $this->aAlteredData = str_replace(strtolower($oValue),strtolower($sAnonymData),$this->aAlteredData);
-                    // handle upCase
-                    $this->aAlteredData = str_replace(strtoupper($oValue),strtoupper($sAnonymData),$this->aAlteredData);
-                    
-                    /** DELETE ACCENT */
-                    $oValueWithoutAccent =  strtr($oValue, self::transformAccent);
-                    $sAnonymDataWithoutAccent = strtr($sAnonymData, self::transformAccent);
-                    // handle lowCase
-                    $this->aAlteredData = str_replace(strtolower($oValueWithoutAccent),strtolower($sAnonymDataWithoutAccent),$this->aAlteredData);
-                    // handle upCase
-                    $this->aAlteredData = str_replace(strtoupper($oValueWithoutAccent),strtoupper($sAnonymDataWithoutAccent),$this->aAlteredData);
+                            // handle lowCase
+                            $oAlterValue = str_replace(strtolower($oValue),strtolower($sAnonymData),$oAlterValue);
 
-                    // reconvert to array
-                    $this->aAlteredData = json_decode($this->aAlteredData, true);
+                            // handle upCase
+                            $oAlterValue = str_replace(strtoupper($oValue),strtoupper($sAnonymData),$oAlterValue);
+
+                            /** DELETE ACCENT */
+                            $oValueWithoutAccent =  strtr($oValue, self::transformAccent);
+                            $sAnonymDataWithoutAccent = strtr($sAnonymData, self::transformAccent);
+
+                            // replace same value
+                            $oAlterValue = str_replace($oValueWithoutAccent,$sAnonymDataWithoutAccent,$oAlterValue);
+
+                            // handle lowCase
+                            $oAlterValue = str_replace(strtolower($oValueWithoutAccent),strtolower($sAnonymDataWithoutAccent),$oAlterValue);
+
+                            // handle upCase
+                            $oAlterValue = str_replace(strtoupper($oValueWithoutAccent),strtoupper($sAnonymDataWithoutAccent),$oAlterValue);
+                        }
+                        if($oAlterValue instanceof DateTime){
+                            $oAlterValue = $oAlterValue->date;
+                        }
+                    }
                 }
             }
         }
