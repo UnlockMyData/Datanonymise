@@ -87,6 +87,8 @@ class ManageFile
     private $aHeaderByIndex; //column number => column name
     private $aData;
     private $aAlteredData;
+    private $aCustomType = [];
+    private $aFormatType = [];
 
     public function __construct(string $sFileName, string $sFileType = self::FILE_CSV, bool $bHasHeader = false, array $aHeaderType = [])
     {
@@ -228,11 +230,35 @@ class ManageFile
             //elif is a token
         }
 
+        foreach($this->aCustomType as $sType => $aColumns){
+            foreach($aColumns as $sColumnName){
+                $this->aHeaderType[$sColumnName] = $sType;
+            }
+        }
+
         HandleLogger::debug(HandleLogger::generateTitle('OUTPUT aHeaderType'));
         HandleLogger::debug(HandleLogger::arrayToString($this->aHeaderType));
 
         HandleLogger::debug(HandleLogger::generateTitle('OUTPUT aHeaderData'));
         HandleLogger::debug(HandleLogger::arrayToString($this->aHeaderData));
+    }
+
+    public function addTypeHeader($aColumn, $sType, $sFormat = ''){
+        HandleLogger::debug(HandleLogger::generateTitle('DEVELOPPER ADD TYPE HEADER'));
+
+        if(false === array_key_exists($sType, $this->aCustomType)){
+            $this->aCustomType[$sType] = [];
+        }
+
+        //specially for date or datetime
+        if('' !== $sFormat){
+                $this->aFormatType[$sType] = $sFormat;            
+        }
+
+        $this->aCustomType[$sType] = array_merge($this->aCustomType[$sType], $aColumn);        
+
+        HandleLogger::debug(HandleLogger::generateTitle('OUTPUT aCustomType'));
+        HandleLogger::debug(HandleLogger::arrayToString($this->aCustomType));
     }
 
     public function anonymise($bAlterAllData = false)
@@ -258,16 +284,31 @@ class ManageFile
                     $oValue = (boolean) $oValue;
                 }
                 //if is a float
-                else if (true === in_array($this->aHeaderType[$sName], array_merge([self::FIELD_TYPE_FLOAT], self::DICT_COLUMN_NAME_LONGITUDE, self::DICT_COLUMN_NAME_LATITUDE))) {
+                else if (true === in_array($this->aHeaderType[$sName], [self::FIELD_TYPE_FLOAT, self::DICT_COLUMN_NAME_LONGITUDE, self::DICT_COLUMN_NAME_LATITUDE])) {
                     $oValue = (float) $oValue;
-                } else if (self::FIELD_TYPE_INT === $this->aHeaderType[$sName]) {
+                } else if (true === in_array($this->aHeaderType[$sName], [self::FIELD_TYPE_INT, self::FIELD_TYPE_ID])) {
                     $oValue = (int) $oValue;
                 } else if (self::FIELD_TYPE_DATETIME === $this->aHeaderType[$sName]) {
-                    $oValue = DateTime::createFromFormat(self::FORMAT_DATETIME, $oValue);
+                    if(true === array_key_exists($this->aHeaderType[$sName], $this->aFormatType)){
+                        $oValue = DateTime::createFromFormat($this->aFormatType[$this->aHeaderType[$sName]], $oValue);
+                    }
+                    else{
+                        $oValue = DateTime::createFromFormat(self::FORMAT_DATETIME, $oValue);
+                    }                    
                 } else if (self::FIELD_TYPE_DATE === $this->aHeaderType[$sName]) {
-                    $oValue = DateTime::createFromFormat(self::FORMAT_DATE, $oValue);
+                    if(true === array_key_exists($this->aHeaderType[$sName], $this->aFormatType)){
+                        $oValue = DateTime::createFromFormat($this->aFormatType[$this->aHeaderType[$sName]], $oValue);
+                    }
+                    else{
+                        $oValue = DateTime::createFromFormat(self::FORMAT_DATE, $oValue);
+                    } 
                 } else if (self::FIELD_TYPE_TIME === $this->aHeaderType[$sName]) {
-                    $oValue = DateTime::createFromFormat(self::FORMAT_TIME, $oValue);
+                    if(true === array_key_exists($this->aHeaderType[$sName], $this->aFormatType)){
+                        $oValue = DateTime::createFromFormat($this->aFormatType[$this->aHeaderType[$sName]], $oValue);
+                    }
+                    else{
+                        $oValue = DateTime::createFromFormat(self::FORMAT_TIME, $oValue);
+                    }
                 }
             }
         }
@@ -292,6 +333,9 @@ class ManageFile
         foreach($this->aData as $nIndex => $aRow)
         {
             foreach($aRow as $sName => $oValue){
+
+                $sAnonymData = $oValue;
+
                 //check if we have a convertion of value and if we did'nt convert it
                 if(true === array_key_exists($this->aHeaderType[$sName], self::ANONYMOUS_USER) && $oValue !== self::ANONYMOUS_USER[$this->aHeaderType[$sName]]){
                 
@@ -305,39 +349,84 @@ class ManageFile
                         $aOccurrenceSameTypeColumn[$this->aHeaderType[$sName]]++;
                         $sAnonymData .= '_' . $aOccurrenceSameTypeColumn[$this->aHeaderType[$sName]];
                     }
+                }
+                else if(true === $bAlterAllData){ // if alter all data is actived we need to generate an anonymous data according to the type of the column
+                    if (self::FIELD_TYPE_ID === $this->aHeaderType[$sName]){
+                        if(true === is_int($oValue)){
+                            $sAnonymData = $oValue * rand();
+                        }
+                    }
+                    else if(self::FIELD_TYPE_TOKEN === $this->aHeaderType[$sName]){
+                        // get larger to take one caracter
+                        $nLengthValue = strlen($oValue);
+                        //choose one number in the size of the value
+                        $nItemKey = rand(0, $nLengthValue - 1);
+                        
+                        $sLetterChoose = $oValue[$nItemKey];
+                        $sReplaceLetter = chr(rand(65,90));
+
+                        while($sLetterChoose == $sReplaceLetter){
+                            $sReplaceLetter = chr(rand(65,90));
+                        }
+                        $sAnonymData = str_replace($sLetterChoose, $sReplaceLetter, $oValue);
+                    }
+                    else if($oValue instanceof DateTime){
+                        $oAnonymData = $oValue;
+                        $oAnonymData->modify('+'.rand(1,30).' day');
+                        $sFormatDate = '';
+                        if(true === array_key_exists($this->aHeaderType[$sName], $this->aFormatType)){
+                            $sFormatDate = $this->aFormatType[$this->aHeaderType[$sName]];
+                        }
+                        else if (self::FIELD_TYPE_DATETIME === $this->aHeaderType[$sName]){
+                            $sFormatDate = self::FORMAT_DATETIME;
+                        }
+                        else if (self::FIELD_TYPE_DATE === $this->aHeaderType[$sName]){
+                            $sFormatDate = self::FORMAT_DATE;
+                        }
+                        else if (self::FIELD_TYPE_TIME === $this->aHeaderType[$sName]){
+                            $sFormatDate = self::FORMAT_TIME;
+                        }
+                        $sAnonymData = $oAnonymData->format($sFormatDate);
+                    }
+                }
                     
+                if($this->aAlteredData[$nIndex][$sName] === $oValue){
                     $this->aAlteredData[$nIndex][$sName] = $sAnonymData;
 
                     /** TODO IF you have a better idea.... */
                     foreach ($this->aAlteredData[$nIndex] as $sAlterName => &$oAlterValue) {
+    
+                        $sValueCompare = $oValue;
+                        if($sValueCompare instanceof DateTime){
+                            $sValueCompare = $sValueCompare->date;
+                        }
+    
                         if(true === is_string($oAlterValue)){
                             // replace same value
-                            $oAlterValue = str_replace($oValue,$sAnonymData,$oAlterValue);
-
+                            $oAlterValue = str_replace($sValueCompare,$sAnonymData,$oAlterValue);
+    
                             // handle lowCase
-                            $oAlterValue = str_replace(strtolower($oValue),strtolower($sAnonymData),$oAlterValue);
-
+                            $oAlterValue = str_replace(strtolower($sValueCompare),strtolower($sAnonymData),$oAlterValue);
+      
                             // handle upCase
-                            $oAlterValue = str_replace(strtoupper($oValue),strtoupper($sAnonymData),$oAlterValue);
-
+                            $oAlterValue = str_replace(strtoupper($sValueCompare),strtoupper($sAnonymData),$oAlterValue);
+       
                             /** DELETE ACCENT */
-                            $oValueWithoutAccent =  strtr($oValue, self::transformAccent);
+                            $oValueWithoutAccent =  strtr($sValueCompare, self::transformAccent);
                             $sAnonymDataWithoutAccent = strtr($sAnonymData, self::transformAccent);
-
+    
                             // replace same value
                             $oAlterValue = str_replace($oValueWithoutAccent,$sAnonymDataWithoutAccent,$oAlterValue);
-
+                         
                             // handle lowCase
                             $oAlterValue = str_replace(strtolower($oValueWithoutAccent),strtolower($sAnonymDataWithoutAccent),$oAlterValue);
-
+                            
                             // handle upCase
                             $oAlterValue = str_replace(strtoupper($oValueWithoutAccent),strtoupper($sAnonymDataWithoutAccent),$oAlterValue);
+                           
                         }
-                        if($oAlterValue instanceof DateTime){
-                            $oAlterValue = $oAlterValue->date;
-                        }
-                    }
-                }
+                    }    
+                }         
             }
         }
 
