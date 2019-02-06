@@ -22,32 +22,64 @@ class ManageFile
     const FIELD_TYPE_TIME     = 'time';
     const FIELD_TYPE_TIMEZONE = 'timezone';
 
-    const FIELD_TYPE_FIRSTNAME      = 'firstname';
-    const FIELD_TYPE_LASTNAME       = 'lastname';
-    const FIELD_TYPE_ADDRESS        = 'address';
-    const FIELD_TYPE_ZIPCODE        = 'zipcode';
-    const FIELD_TYPE_CITY           = 'city';
-    const FIELD_TYPE_TOKEN          = 'token';
-    const FIELD_TYPE_LATITUDE       = 'latitude';
-    const FIELD_TYPE_LONGITUDE      = 'longitude';
-    const FIELD_TYPE_ID             = 'id';
-    const FIELD_TYPE_COUNTRY_CODE   = 'country_code';
-    const FIELD_TYPE_LOCAL_LANGUAGE = 'local_language';
-    const FIELD_TYPE_STATE          = 'state';
-    const FIELD_TYPE_STATE_FULL     = 'state_full';
-    const FIELD_TYPE_PHONE_NUMBER   = 'phone_number';
-    const FIELD_TYPE_MOBILE_NUMBER  = 'mobile_number';
+    const FIELD_TYPE_FIRSTNAME        = 'firstname';
+    const FIELD_TYPE_LASTNAME         = 'lastname';
+    const FIELD_TYPE_ADDRESS          = 'address';
+    const FIELD_TYPE_SECOND_ADDRESS   = 'second_address';
+    const FIELD_TYPE_ADDRESS_COMPLETE = 'address_complete';
+    const FIELD_TYPE_ZIPCODE          = 'zipcode';
+    const FIELD_TYPE_CITY             = 'city';
+    const FIELD_TYPE_TOKEN            = 'token';
+    const FIELD_TYPE_LATITUDE         = 'latitude';
+    const FIELD_TYPE_LONGITUDE        = 'longitude';
+    const FIELD_TYPE_ID               = 'id';
+    const FIELD_TYPE_COUNTRY_CODE     = 'country_code';
+    const FIELD_TYPE_COUNTRY          = 'country';
+    const FIELD_TYPE_LOCAL_LANGUAGE   = 'local_language';
+    const FIELD_TYPE_STATE            = 'state';
+    const FIELD_TYPE_STATE_FULL       = 'state_full';
+    const FIELD_TYPE_PHONE_NUMBER     = 'phone_number';
+    const FIELD_TYPE_MOBILE_NUMBER    = 'mobile_number';
 
-    const DICT_COLUMN_NAME_FIRSTNAME      = ['firstname', 'name'];
-    const DICT_COLUMN_NAME_LASTNAME       = ['lastname', 'surname'];
-    const DICT_COLUMN_NAME_ADDRESS        = ['address'];
-    const DICT_COLUMN_NAME_ZIPCODE        = ['zipcode'];
-    const DICT_COLUMN_NAME_CITY           = ['city'];
-    const DICT_COLUMN_NAME_LATITUDE       = ['latitude'];
-    const DICT_COLUMN_NAME_LONGITUDE      = ['longitude'];
-    const DICT_COLUMN_NAME_COUNTRY_CODE   = ['country'];
-    const DICT_COLUMN_NAME_LOCAL_LANGUAGE = ['locale'];
-    const DICT_COLUMN_NAME_TIMEZONE       = ['timezone', 'time_zone'];
+    const DICT_COLUMN_NAME_FIRSTNAME        = ['firstname', 'name', 'Prénom (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_LASTNAME         = ['lastname', 'surname', 'Nom (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_ADDRESS          = ['address', '﻿Adresse 1 (appartement) (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_SECOND_ADDRESS   = ['Adresse 2 (immeuble) (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_ADDRESS_COMPLETE = ['Adresse saisie (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_ZIPCODE          = ['zipcode', 'Code Postal (Dimension de ciblage)', 'Commune (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_STATE            = ['Département (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_STATE_FULL       = ['Région (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_CITY             = ['city', 'Ville (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_LATITUDE         = ['latitude'];
+    const DICT_COLUMN_NAME_LONGITUDE        = ['longitude'];
+    const DICT_COLUMN_NAME_COUNTRY_CODE     = ['country', 'Nationalité (Dimension de ciblage)', 'Langue (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_COUNTRY          = ['Pays (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_LOCAL_LANGUAGE   = ['locale'];
+    const DICT_COLUMN_NAME_TIMEZONE         = ['timezone', 'time_zone'];
+    const DICT_COLUMN_NAME_MOBILE_NUMBER    = ['Téléphone mobile (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_ID               = ['IMEI', 'ID_CONSENTEMENT_EMAIL (Dimension de ciblage)', 'Id \'Contact\' (Dimension de ciblage)','ID \'Code Retour QAS\' (Dimension de ciblage)','Master Id (Dimension de ciblage)','Identifiant Neolane (Dimension de ciblage)','Household Id (Dimension de ciblage)', 'ID \'Civilité\' (Dimension de ciblage)'];
+    const DICT_COLUMN_NAME_TOKEN            = ['payment response id', 'shop id', 'item use id', 'product id', 'order id'];
+
+    const ARRAY_DICT_COLUMN_DETECTOR = [
+        self::FIELD_TYPE_FIRSTNAME        => self::DICT_COLUMN_NAME_FIRSTNAME,
+        self::FIELD_TYPE_LASTNAME         => self::DICT_COLUMN_NAME_LASTNAME,
+        self::FIELD_TYPE_ADDRESS          => self::DICT_COLUMN_NAME_ADDRESS,
+        self::FIELD_TYPE_SECOND_ADDRESS   => self::DICT_COLUMN_NAME_SECOND_ADDRESS,
+        self::FIELD_TYPE_ADDRESS_COMPLETE => self::DICT_COLUMN_NAME_ADDRESS_COMPLETE,
+        self::FIELD_TYPE_ZIPCODE          => self::DICT_COLUMN_NAME_ZIPCODE,
+        self::FIELD_TYPE_STATE            => self::DICT_COLUMN_NAME_STATE,
+        self::FIELD_TYPE_STATE_FULL       => self::DICT_COLUMN_NAME_STATE_FULL,
+        self::FIELD_TYPE_CITY             => self::DICT_COLUMN_NAME_CITY,
+        self::FIELD_TYPE_LATITUDE         => self::DICT_COLUMN_NAME_LATITUDE,
+        self::FIELD_TYPE_LONGITUDE        => self::DICT_COLUMN_NAME_LONGITUDE,
+        self::FIELD_TYPE_COUNTRY_CODE     => self::DICT_COLUMN_NAME_COUNTRY_CODE,
+        self::FIELD_TYPE_LOCAL_LANGUAGE   => self::DICT_COLUMN_NAME_LOCAL_LANGUAGE,
+        self::FIELD_TYPE_TIMEZONE         => self::DICT_COLUMN_NAME_TIMEZONE,
+        self::FIELD_TYPE_MOBILE_NUMBER    => self::DICT_COLUMN_NAME_MOBILE_NUMBER,
+        self::FIELD_TYPE_ID               => self::DICT_COLUMN_NAME_ID,
+        self::FIELD_TYPE_TOKEN            => self::DICT_COLUMN_NAME_TOKEN,
+    ];
+
 
     const DICT_VALUE_DETECT_BOOLEAN = ['True', 'TRUE', 'true', 'on', 'yes', '1', 1, 0, '0', 'no', 'off', 'False', 'false', 'FALSE'];
 
@@ -55,21 +87,27 @@ class ManageFile
     const FORMAT_TIME     = 'H:i:s';
     const FORMAT_DATE     = 'Y-m-d';
 
+    const NO_NAME_COLUMN = 'no_name_column';
+
     //https://www.fakepersongenerator.com/random-florida-address-generator
     const ANONYMOUS_USER = [
-        self::FIELD_TYPE_LASTNAME       => 'doe',
-        self::FIELD_TYPE_FIRSTNAME      => 'john',
-        self::FIELD_TYPE_MAIL           => 'john.doe@unlock-my-data.com',
-        self::FIELD_TYPE_ADDRESS        => '2061 Terry Lane',
-        self::FIELD_TYPE_CITY           => 'apopka',
-        self::FIELD_TYPE_ZIPCODE        => '32703',
-        self::FIELD_TYPE_STATE          => 'FL',
-        self::FIELD_TYPE_STATE_FULL     => 'florida',
-        self::FIELD_TYPE_PHONE_NUMBER   => '321-322-2620',
-        self::FIELD_TYPE_MOBILE_NUMBER  => '305-607-9487',
-        self::FIELD_TYPE_TIMEZONE       => 'Europe/Paris',
-        self::FIELD_TYPE_LATITUDE       => '28.584480',
-        self::FIELD_TYPE_LONGITUDE      => '-81.625229',
+        self::FIELD_TYPE_LASTNAME         => 'doe',
+        self::FIELD_TYPE_FIRSTNAME        => 'john',
+        self::FIELD_TYPE_MAIL             => 'john.doe@unlock-my-data.com',
+        self::FIELD_TYPE_ADDRESS          => '99, rue des Dunes',
+        self::FIELD_TYPE_SECOND_ADDRESS   => '58, Rue Joseph Vernet',
+        self::FIELD_TYPE_ADDRESS_COMPLETE => '99, rue des Dunes batiment B 75000 Paris',
+        self::FIELD_TYPE_CITY             => 'Paris',
+        self::FIELD_TYPE_COUNTRY          => 'France',
+        self::FIELD_TYPE_COUNTRY_CODE     => 'FRA',
+        self::FIELD_TYPE_ZIPCODE          => '75000',
+        self::FIELD_TYPE_STATE            => 'IDF',
+        self::FIELD_TYPE_STATE_FULL       => 'île-de-France',
+        self::FIELD_TYPE_PHONE_NUMBER     => '02.13.22.26.20',
+        self::FIELD_TYPE_MOBILE_NUMBER    => '03.05.07.94.87',
+        self::FIELD_TYPE_TIMEZONE         => 'Europe/Paris',
+        self::FIELD_TYPE_LATITUDE         => '28.584480',
+        self::FIELD_TYPE_LONGITUDE        => '-81.625229',
     ];
 
     const transformAccent = [ 'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
@@ -89,8 +127,9 @@ class ManageFile
     private $aAlteredData;
     private $aCustomType = [];
     private $aFormatType = [];
+    private $sDelimiter;
 
-    public function __construct(string $sFileName, string $sFileType = self::FILE_CSV, bool $bHasHeader = false, array $aHeaderType = [])
+    public function __construct(string $sFileName, string $sFileType = self::FILE_CSV, bool $bHasHeader = false, array $aHeaderType = [], $sDelimiter = ',')
     {
         HandleLogger::debug(HandleLogger::generateTitle('CONSTRUCT OBJECT MANAGE FILE'));
         HandleLogger::debug('Params (FileName:' . $sFileName . ', FileType:' . $sFileType . ', HasHeader:' . $bHasHeader . ', Header[]: ' . HandleLogger::arrayToString($aHeaderType));
@@ -103,6 +142,7 @@ class ManageFile
         $this->sFileType   = $sFileType;
         $this->bHasHeader  = $bHasHeader;
         $this->aHeaderType = $aHeaderType;
+        $this->sDelimiter  = $sDelimiter;
     }
 
     private function parseFile()
@@ -116,7 +156,7 @@ class ManageFile
         $row                  = 0;
 
         if (($handle = fopen($this->sFileName, "r")) !== false) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+            while (($data = fgetcsv($handle, 10000, $this->sDelimiter)) !== false) {
                 if (true === $this->bHasHeader) {
                     if (1 === $row) {
                         $aNextData = [];
@@ -133,7 +173,11 @@ class ManageFile
                     } else {
                         $aNextData = [];
                         foreach ($data as $nKey => $oValue) {
-                            $aNextData[$this->aHeaderByIndex[$nKey]] = $oValue;
+                            $sKey = self::NO_NAME_COLUMN;
+                            if(true === array_key_exists($nKey, $this->aHeaderByIndex)){
+                                $sKey = $this->aHeaderByIndex[$nKey];
+                            }
+                            $aNextData[$sKey] = $oValue;
                         }
                         array_push($this->aData, $aNextData);
                     }
@@ -203,28 +247,12 @@ class ManageFile
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_TIME;
             } else {
                 $this->aHeaderType[$sName] = self::FIELD_TYPE_STRING;
+            }
 
-                //analysis with name of the column
-                if (in_array($sName, self::DICT_COLUMN_NAME_FIRSTNAME)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_FIRSTNAME;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_LASTNAME)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_LASTNAME;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_ADDRESS)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_ADDRESS;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_CITY)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_CITY;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_COUNTRY_CODE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_COUNTRY_CODE;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_LATITUDE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_LATITUDE;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_LONGITUDE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_LONGITUDE;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_LOCAL_LANGUAGE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_LOCAL_LANGUAGE;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_TIMEZONE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_TIMEZONE;
-                } else if (in_array($sName, self::DICT_COLUMN_NAME_ZIPCODE)) {
-                    $this->aHeaderType[$sName] = self::FIELD_TYPE_ZIPCODE;
+             //analysis with name of the column if we find exatly the same name of column it override the value
+             foreach(self::ARRAY_DICT_COLUMN_DETECTOR as $sFieldType => $aDictColumn){
+                if (in_array($sName, $aDictColumn)) {
+                    $this->aHeaderType[$sName] = $sFieldType;
                 }
             }
             //elif is a token
@@ -353,7 +381,7 @@ class ManageFile
                 else if(true === $bAlterAllData){ // if alter all data is actived we need to generate an anonymous data according to the type of the column
                     if (self::FIELD_TYPE_ID === $this->aHeaderType[$sName]){
                         if(true === is_int($oValue)){
-                            $sAnonymData = $oValue * rand();
+                            $sAnonymData = $oValue * rand(10,40);
                         }
                     }
                     else if(self::FIELD_TYPE_TOKEN === $this->aHeaderType[$sName]){
@@ -391,42 +419,49 @@ class ManageFile
                 }
                     
                 if($this->aAlteredData[$nIndex][$sName] === $oValue){
+                    
                     $this->aAlteredData[$nIndex][$sName] = $sAnonymData;
 
-                    /** TODO IF you have a better idea.... */
-                    foreach ($this->aAlteredData[$nIndex] as $sAlterName => &$oAlterValue) {
-    
-                        $sValueCompare = $oValue;
-                        if($sValueCompare instanceof DateTime){
-                            $sValueCompare = $sValueCompare->date;
-                        }
-    
-                        if(true === is_string($oAlterValue)){
-                            // replace same value
-                            $oAlterValue = str_replace($sValueCompare,$sAnonymData,$oAlterValue);
-    
-                            // handle lowCase
-                            $oAlterValue = str_replace(strtolower($sValueCompare),strtolower($sAnonymData),$oAlterValue);
-      
-                            // handle upCase
-                            $oAlterValue = str_replace(strtoupper($sValueCompare),strtoupper($sAnonymData),$oAlterValue);
-       
-                            /** DELETE ACCENT */
-                            $oValueWithoutAccent =  strtr($sValueCompare, self::transformAccent);
-                            $sAnonymDataWithoutAccent = strtr($sAnonymData, self::transformAccent);
-    
-                            // replace same value
-                            $oAlterValue = str_replace($oValueWithoutAccent,$sAnonymDataWithoutAccent,$oAlterValue);
-                         
-                            // handle lowCase
-                            $oAlterValue = str_replace(strtolower($oValueWithoutAccent),strtolower($sAnonymDataWithoutAccent),$oAlterValue);
+                    if(self::FIELD_TYPE_ID !== $this->aHeaderType[$sName]){
+                        /** TODO IF you have a better idea.... */
+                        foreach ($this->aAlteredData[$nIndex] as $sAlterName => &$oAlterValue) {
                             
-                            // handle upCase
-                            $oAlterValue = str_replace(strtoupper($oValueWithoutAccent),strtoupper($sAnonymDataWithoutAccent),$oAlterValue);
-                           
-                        }
-                    }    
-                }         
+                            $sValueCompare = $oValue;
+                            if($sValueCompare instanceof DateTime){
+                                $sValueCompare = $sValueCompare->date;
+                            }
+
+                            if(true === is_string($oAlterValue)){
+                                // replace same value
+                                $oAlterValue = str_replace($sValueCompare,$sAnonymData,$oAlterValue);
+                            
+                                $oAlterValue = str_replace(trim($sValueCompare),$sAnonymData,$oAlterValue);
+
+                                // handle lowCase
+                                $oAlterValue = str_replace(strtolower($sValueCompare),strtolower($sAnonymData),$oAlterValue);
+                                $oAlterValue = str_replace(strtolower(trim($sValueCompare)),strtolower($sAnonymData),$oAlterValue);
+
+                                // handle upCase
+                                $oAlterValue = str_replace(strtoupper($sValueCompare),strtoupper($sAnonymData),$oAlterValue);
+                                $oAlterValue = str_replace(strtoupper(trim($sValueCompare)),strtoupper($sAnonymData),$oAlterValue);
+
+                                /** DELETE ACCENT */
+                                $oValueWithoutAccent =  strtr($sValueCompare, self::transformAccent);
+                                $sAnonymDataWithoutAccent = strtr($sAnonymData, self::transformAccent);
+
+                                // replace same value
+                                $oAlterValue = str_replace($oValueWithoutAccent,$sAnonymDataWithoutAccent,$oAlterValue);
+                            
+                                // handle lowCase
+                                $oAlterValue = str_replace(strtolower($oValueWithoutAccent),strtolower($sAnonymDataWithoutAccent),$oAlterValue);
+                                
+                                // handle upCase
+                                $oAlterValue = str_replace(strtoupper($oValueWithoutAccent),strtoupper($sAnonymDataWithoutAccent),$oAlterValue);
+                            
+                            }
+                        }   
+                    }   
+                }     
             }
         }
 
